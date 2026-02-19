@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Happy Anniversary Simran ❤️</title>
+  <style>
+    :root{
+      --bg1:#ffdde1; --bg2:#ee9ca7;
+      --card:#ffffffcc; --text:#2b2b2b;
+      --accent:#ff3b6a; --accent2:#5b2cff;
+      --shadow: 0 18px 60px rgba(0,0,0,.15);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box;font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    body{
+      margin:0; min-height:100vh;
+      background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center;
+      padding:18px;
+      overflow:hidden;
+    }
+    .wrap{width:min(720px, 96vw); position:relative;}
+    .card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.55);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 18px;
+      backdrop-filter: blur(8px);
+    }
+    h1{margin:0 0 8px; font-size: clamp(22px, 4vw, 34px); color:#1f1f1f;}
+    p{margin:8px 0; color:var(--text); line-height:1.45;}
+    .muted{opacity:.8; font-size:14px;}
+    .center{text-align:center;}
+    .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:14px;}
+    button{
+      border:0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight:700;
+      font-size: 16px;
+      cursor:pointer;
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active{transform: scale(.98);}
+    .yes{background: var(--accent); color:white; min-width: 140px;}
+    .no{background: #111; color:white; min-width: 140px;}
+    .ghost{background:#ffffff; color:#111; border:1px solid rgba(0,0,0,.12);}
+    .stepTitle{font-size:18px; font-weight:800; margin-top:10px;}
+    .quote{
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      background: rgba(255,255,255,.7);
+      border:1px solid rgba(255,255,255,.6);
+    }
+    .progress{
+      height:10px; border-radius:999px;
+      background: rgba(0,0,0,.08);
+      overflow:hidden;
+      margin: 14px 0 6px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .35s ease;
+    }
+    .pill{
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      background: rgba(255,59,106,.14);
+      border: 1px solid rgba(255,59,106,.18);
+      font-weight:700; font-size:13px;
+      margin-top:10px;
+    }
+    .floatingNo{
+      position: fixed;
+      left: 55%;
+      top: 70%;
+      transform: translate(-50%, -50%);
+      z-index: 50;
+    }
+    .hide{display:none !important;}
+
+    .confetti{
+      position:fixed; inset:0; pointer-events:none;
+      overflow:hidden; z-index: 999;
+    }
+    .piece{
+      position:absolute; width:10px; height:16px; border-radius:3px;
+      top:-20px;
+      animation: fall 2.6s linear forwards;
+      opacity:.95;
+    }
+    @keyframes fall{
+      to{ transform: translateY(120vh) rotate(520deg); opacity:1;}
+    }
+
+    .signature{margin-top:12px; font-weight:800; color:#111;}
+    .heart{
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.12));
+      font-size: 26px;
+      display:inline-block;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse{0%,100%{transform: scale(1)}50%{transform: scale(1.12)}}
+
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,.12);
+      outline:none;
+      font-size:15px;
+    }
+    textarea{min-height:90px; resize:none;}
+    .ok{color:#0f7b3b; font-weight:800;}
+    .warn{color:#b00020; font-weight:800;}
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <!-- START SCREEN -->
+    <div id="start" class="card center">
+      <div class="pill">Anniversary Mode: ON ✨</div>
+      <h1>Hey Simran <span class="heart">❤️</span></h1>
+      <p class="stepTitle">Are you ready to celebrate our anniversary?</p>
+      <p class="muted">Try clicking NO… if you can 😄</p>
+
+      <div class="row">
+        <button id="yesStart" class="yes">YES 💖</button>
+        <button id="noBtn" class="no floatingNo" aria-label="No button">NO 🙈</button>
+      </div>
+
+      <p class="quote">“With you, every ordinary day becomes a special memory.”</p>
+      <p class="muted">Tip: Works best on iPhone Safari too ✅</p>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz" class="card hide">
+      <div class="pill" id="pillStep">Step 1 of 7</div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <h1 id="qTitle">A little fun…</h1>
+      <p id="qText">Ready for a tiny romantic journey?</p>
+
+      <div class="row" id="answers"></div>
+
+      <div class="quote" id="qQuote"></div>
+
+      <div class="row" style="margin-top:16px;">
+        <button id="backBtn" class="ghost">← Back</button>
+        <button id="nextBtn" class="yes">Next →</button>
+      </div>
+      <p class="muted center" id="hint">Pick an option, then tap Next.</p>
+    </div>
+
+    <!-- FINAL SCREEN -->
+    <div id="final" class="card hide center">
+      <div class="pill">Final Step 🎉</div>
+      <h1>Happy Anniversary, Simran ❤️</h1>
+      <p id="finalMsg">
+        Thank you for being my peace, my strength, and my favorite person.
+        I choose you — today, tomorrow, always.
+      </p>
+
+      <p class="quote">
+        “I don’t need perfect days… I just need you in my days.”
+      </p>
+
+      <div class="row">
+        <button id="finalYes" class="yes">YES, I LOVE YOU 😘</button>
+      </div>
+
+      <!-- Surprise reveal (shows AFTER she clicks LOVE YOU) -->
+      <div id="carSurprise" class="hide">
+        <p class="stepTitle" style="margin-top:18px;">🚗 ONE MORE BIG SURPRISE…</p>
+        <p class="quote">
+          <b>Inside the car back seat</b> 😄 <br/>
+          Go check it now… and come back here to leave me a message ❤️
+        </p>
+      </div>
+
+      <!-- Feedback form (sends to husband email via Formspree) -->
+      <div style="text-align:left; margin-top:16px;">
+        <p class="stepTitle">Send me your feedback 💌</p>
+
+        <!-- ===========================
+             EMAIL RECEIVING SETUP (IMPORTANT)
+             1) Create a Formspree form (free): https://formspree.io
+             2) Formspree will ask WHICH EMAIL to receive messages → put husband's email there
+             3) Paste the endpoint below (action="..."):
+
+             ✅ THIS IS WHERE YOU "ADD MAIL ID" FOR RECEIVING FEEDBACK:
+             - You add the husband's email INSIDE FORMSPREE DASHBOARD
+             - Here you add ONLY the FORMSPREE ENDPOINT
+           =========================== -->
+
+        <form id="feedbackForm" action="https://formspree.io/f/maqdbvro" method="POST">
+          <input type="hidden" name="From" value="Anniversary Page for Simran">
+          <input type="hidden" name="Answers Summary" id="answersSummary">
+
+          <label class="muted">Simran’s message:</label>
+          <textarea name="Message" id="userMessage" placeholder="Type something sweet…"></textarea>
+
+          <div class="row" style="justify-content:flex-start; margin-top:10px;">
+            <button type="submit" class="yes">Send to Husband Email 💖</button>
+            <button type="button" class="ghost" id="copyTextBtn">Copy Message</button>
+          </div>
+
+          <p class="muted" id="sendStatus"></p>
+        </form>
+      </div>
+
+      <p class="signature">— From your husband 💗</p>
+    </div>
+  </div>
+
+  <div id="confetti" class="confetti hide"></div>
+
+<script>
+  /************************************************************
+   * NO BUTTON MOVES AWAY (iPhone friendly: pointer/touch)
+   ************************************************************/
+  const noBtn = document.getElementById('noBtn');
+
+  function moveNo(){
+    const pad = 16;
+    const btnW = noBtn.offsetWidth || 140;
+    const btnH = noBtn.offsetHeight || 46;
+
+    const maxX = Math.max(pad, window.innerWidth - btnW - pad);
+    const maxY = Math.max(pad, window.innerHeight - btnH - pad);
+
+    const x = Math.floor(pad + Math.random() * (maxX - pad));
+    const y = Math.floor(pad + Math.random() * (maxY - pad));
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+    noBtn.style.transform = "translate(0,0)";
+  }
+
+  // Avoid hover-only; use touch/pointer. Also prevent accidental click.
+  ["pointerdown","touchstart","click"].forEach(evt=>{
+    noBtn.addEventListener(evt, (e)=>{
+      e.preventDefault();
+      moveNo();
+    }, {passive:false});
+  });
+
+  /************************************************************
+   * START YES
+   ************************************************************/
+  const start = document.getElementById('start');
+  const quiz = document.getElementById('quiz');
+  const finalScreen = document.getElementById('final');
+
+  document.getElementById('yesStart').addEventListener('click', ()=>{
+    start.classList.add('hide');
+    noBtn.classList.add('hide');
+    quiz.classList.remove('hide');
+    renderStep();
+  });
+
+  /************************************************************
+   * QUIZ STEPS (Added 2 beginning steps as requested)
+   ************************************************************/
+  const steps = [
+    {
+      title: "Step 1 — Small mission 😄",
+      text: "Simran… go and check the TV drawer now 🗄️✨",
+      options: ["Done ✅ (I checked!)", "Not yet 🙈 (give me a second)"],
+      quote: "“The best surprises are the ones that lead you to a smile.”"
+    },
+    {
+      title: "Step 2 — Tell me the truth 😘",
+      text: "After checking… what did you feel first?",
+      options: ["I smiled instantly 😊", "I got emotional 🥺", "I laughed 😂", "I felt so loved ❤️"],
+      quote: "“Your reactions are my favorite kind of happiness.”"
+    },
+    {
+      title: "Step 3 — Choose our vibe 💞",
+      text: "How should we celebrate today?",
+      options: ["Dinner date 🍽️", "Long drive 🚗", "Stay home & cuddle 🛋️"],
+      quote: "“Love is not in big words… it’s in small moments with you.”"
+    },
+    {
+      title: "Step 4 — The cutest truth 😄",
+      text: "What do you think I love most about you?",
+      options: ["Your smile 😊", "Your caring heart 💗", "Your strength 💪", "Everything 😍"],
+      quote: "“Your kindness is the home my heart always returns to.”"
+    },
+    {
+      title: "Step 5 — A promise ✨",
+      text: "What should I promise you more of, going forward?",
+      options: ["More patience 🤍", "More laughs 😂", "More support 🤝"],
+      quote: "“I’ll keep choosing you — even on the hard days.”"
+    },
+    {
+      title: "Step 6 — A little romance 💌",
+      text: "Pick a love note to unlock:",
+      options: ["You’re my peace 🕊️", "You’re my best friend 🫶", "You’re my forever ♾️", "You’re my lucky charm 🍀"],
+      quote: "“I still get butterflies… and it’s been you all along.”"
+    },
+    {
+      title: "Step 7 — The big question 😘",
+      text: "Simran… will you be my forever my love, again and again?",
+      options: ["YES ❤️", "YES 💖", "YES 😘", "YES ♾️"],
+      quote: "“If I had to choose again, I’d still choose you.”"
+    }
+  ];
+
+  let current = 0;
+  let selected = null;
+  const picked = new Array(steps.length).fill(null);
+
+  const qTitle = document.getElementById('qTitle');
+  const qText  = document.getElementById('qText');
+  const qQuote = document.getElementById('qQuote');
+  const answers = document.getElementById('answers');
+  const pillStep = document.getElementById('pillStep');
+  const bar = document.getElementById('bar');
+  const hint = document.getElementById('hint');
+
+  function renderStep(){
+    const s = steps[current];
+    selected = picked[current];
+
+    pillStep.textContent = `Step ${current+1} of ${steps.length}`;
+    bar.style.width = `${Math.round(((current+1)/steps.length)*100)}%`;
+
+    qTitle.textContent = s.title;
+    qText.textContent  = s.text;
+    qQuote.textContent = s.quote;
+
+    answers.innerHTML = "";
+    s.options.forEach((opt, idx)=>{
+      const b = document.createElement('button');
+      b.className = "ghost";
+      b.textContent = opt;
+      b.style.minWidth = "170px";
+
+      if(selected === idx) b.className = "yes";
+
+      b.addEventListener('click', ()=>{
+        selected = idx;
+        picked[current] = idx;
+        [...answers.children].forEach(x=>x.className="ghost");
+        b.className = "yes";
+        hint.textContent = "Nice choice 😄 Tap Next.";
+      });
+
+      answers.appendChild(b);
+    });
+
+    hint.textContent = (selected === null) ? "Pick an option, then tap Next." : "Nice choice 😄 Tap Next.";
+    document.getElementById('backBtn').disabled = (current === 0);
+    document.getElementById('backBtn').style.opacity = (current === 0) ? .5 : 1;
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    if(selected === null){
+      hint.textContent = "Choose one option first 😅";
+      return;
+    }
+    if(current < steps.length - 1){
+      current++;
+      renderStep();
+    } else {
+      quiz.classList.add('hide');
+      finalScreen.classList.remove('hide');
+      updateAnswersSummary();
+    }
+  });
+
+  document.getElementById('backBtn').addEventListener('click', ()=>{
+    if(current > 0){
+      current--;
+      renderStep();
+    }
+  });
+
+  /************************************************************
+   * FINAL YES -> Confetti + Show Car Surprise
+   ************************************************************/
+  const confetti = document.getElementById('confetti');
+  const carSurprise = document.getElementById('carSurprise');
+
+  function popConfetti(){
+    confetti.classList.remove('hide');
+    confetti.innerHTML = "";
+    const pieces = 120;
+    for(let i=0;i<pieces;i++){
+      const p = document.createElement('div');
+      p.className = "piece";
+      p.style.left = Math.random()*100 + "vw";
+      p.style.animationDelay = (Math.random()*0.9) + "s";
+      const colors = ["#ff3b6a","#ffd166","#06d6a0","#118ab2","#5b2cff","#ffffff","#111111"];
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      confetti.appendChild(p);
+    }
+    setTimeout(()=>confetti.classList.add('hide'), 3200);
+  }
+
+  document.getElementById('finalYes').addEventListener('click', ()=>{
+    popConfetti();
+    document.getElementById('finalMsg').textContent =
+      "You clicked YES 😘 That means… I get to love you louder, care for you better, and make you happier every day. Happy Anniversary, Simran ❤️";
+    carSurprise.classList.remove('hide'); // show the car-back-seat surprise text
+  });
+
+  /************************************************************
+   * Feedback summary (sent via email form)
+   ************************************************************/
+  function updateAnswersSummary(){
+    const summary = steps.map((s, i)=>{
+      const idx = picked[i];
+      const ans = (idx === null) ? "(no answer)" : s.options[idx];
+      return `- ${s.title}: ${ans}`;
+    }).join("\n");
+    document.getElementById('answersSummary').value = summary;
+  }
+
+  /************************************************************
+   * Form submit via fetch (stays on page; iPhone friendly)
+   ************************************************************/
+  const feedbackForm = document.getElementById('feedbackForm');
+  const sendStatus = document.getElementById('sendStatus');
+
+  feedbackForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    // IMPORTANT: If user didn't replace endpoint, warn
+    const action = feedbackForm.getAttribute('action');
+    if(!action || action.includes("PASTE_YOUR_FORM_ID_HERE")){
+      sendStatus.innerHTML = "<span class='warn'>Please paste your Formspree endpoint in the form action first.</span>";
+      return;
+    }
+
+    sendStatus.textContent = "Sending…";
+
+    try{
+      const formData = new FormData(feedbackForm);
+      const res = await fetch(action, {
+        method: "POST",
+        body: formData,
+        headers: { "Accept": "application/json" }
+      });
+
+      if(res.ok){
+        sendStatus.innerHTML = "<span class='ok'>Sent! 💖 Your message reached him.</span>";
+        feedbackForm.reset();
+        updateAnswersSummary(); // keep summary present even after reset
+      } else {
+        sendStatus.innerHTML = "<span class='warn'>Could not send. Please try again.</span>";
+      }
+    } catch(err){
+      sendStatus.innerHTML = "<span class='warn'>Network issue. Check internet and try again.</span>";
+    }
+  });
+
+  /************************************************************
+   * Copy message button (useful if no internet)
+   ************************************************************/
+  document.getElementById('copyTextBtn').addEventListener('click', async ()=>{
+    const msg = document.getElementById('userMessage').value || "";
+    try{
+      await navigator.clipboard.writeText(msg);
+      sendStatus.innerHTML = "<span class='ok'>Copied to clipboard ✅</span>";
+    }catch(e){
+      sendStatus.innerHTML = "<span class='warn'>Copy not supported. You can manually select and copy.</span>";
+    }
+  });
+
+  // place NO initially nicely
+  window.addEventListener('load', moveNo);
+  window.addEventListener('resize', moveNo);
+</script>
+
+</body>
+</html>
